@@ -7,8 +7,12 @@ function createNewRide() {
         startTime: rideId,
         stopTime: null
     }
-saveRideRecord(rideId, rideRecord)
+    saveRideRecord(rideId, rideRecord)
     return rideId
+}
+
+function getAllRides() {
+    return Object.entries(localStorage)
 }
 
 function getRideRecord(rideId) {
@@ -41,11 +45,11 @@ function addPosition(rideId, position) {
     saveRideRecord(rideId, rideRecord)
 }
 
-function updateStopTime(rideId){
+function updateStopTime(rideId) {
 
-        const rideRecord = getRideRecord(rideId)
+    const rideRecord = getRideRecord(rideId)
 
-        rideRecord.stopTime = new Date.now()
+    rideRecord.stopTime = new Date.now()
 
-        saveRideRecord(rideId, rideRecord)
+    saveRideRecord(rideId, rideRecord)
 }
