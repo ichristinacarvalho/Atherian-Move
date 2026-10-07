@@ -49,7 +49,7 @@ function updateStopTime(rideId) {
 
     const rideRecord = getRideRecord(rideId)
 
-    rideRecord.stopTime = new Date.now()
+    rideRecord.stopTime = Date.now()
 
     saveRideRecord(rideId, rideRecord)
 }
