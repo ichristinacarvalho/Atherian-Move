@@ -9,7 +9,9 @@ allRides.forEach(async ([id, value]) => {
     if (!ride.data || ride.data.length === 0)
         return
 
+    const mapID = `map${ride.id}`
     const mapElement = document.createElement("div")
+    mapElement.id = mapID
     mapElement.style = "width:100px; height:100px"
     mapElement.classList.add("bg-secondary")
     mapElement.classList.add("rounded-4")
@@ -30,7 +32,7 @@ allRides.forEach(async ([id, value]) => {
     const firstLocationData = await getlocationData(firstPosition.latitude, firstPosition.longitude)
 
     const cityDiv = document.createElement("li")
-    cityDiv.innerText = `${firstLocationData.city} - ${firstLocationData.countryCode}`
+    cityDiv.innerText = `${firstLocationData.city}  ${firstLocationData.countryCode}`
     cityDiv.className = "text-primary mb-2"
 
     const maxSpeedDiv = document.createElement("div")
@@ -57,4 +59,20 @@ allRides.forEach(async ([id, value]) => {
 
     rideListElement.appendChild(itemElement)
     rideListElement.appendChild(durationDiv)
+
+    const map = L.map(mapID, {
+        attributionControl: false,
+        zoomControl: false,
+        draggin: false,
+        scrollWheelZoom: false
+    })
+    map.setView([firstPosition.latitude, firstPosition.longitude], 13)
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        minZoom: 5,
+        maxZoom: 16,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    L.marker([firstPosition.latitude, firstPosition.longitude]).addTo(map)
 })

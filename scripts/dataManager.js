@@ -76,7 +76,6 @@ function getStartDate(ride) {
     const month = d.toLocaleString("en-US", { month: "short" })
     const year = d.toLocaleString("en-US", { year: "numeric" })
 
-    // CORREÇÃO: Propriedades separadas corretamente
     const hour = d.toLocaleString("en-US", { hour: "2-digit", hour12: false })
     const minute = d.toLocaleString("en-US", { minute: "2-digit" })
 

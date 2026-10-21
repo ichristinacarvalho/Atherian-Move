@@ -4,23 +4,27 @@ const ride = getRideRecord(rideID)
 
 document.addEventListener("DOMContentLoaded", async () => {
 
+    // Verificação colocada no lugar certo (dentro da função)
+    if (!ride || !ride.data || ride.data.length === 0) {
+        alert("Nenhum dado encontrado para esta corrida.")
+        window.location.href = "./index.html"
+        return
+    }
+
     const dataElement = document.createElement("div")
     dataElement.className = "flex-fill d-flex flex-column"
 
-    const itemElement = document.createElement("li")
-    itemElement.id = ride.id
-    itemElement.className = "d-flex p-1 align-items-center justify-content-between shadow-sm gap-3"
-    rideListElement.appendChild(itemElement)
-
-    itemElement.addEventListener("click", () => {
-        window.location.href = `../detail.html?id=${ride.id}`
-    })
-
     const firstPosition = ride.data[0]
-    const firstLocationData = await getlocationData(firstPosition.latitude, firstPosition.longitude)
+    let firstLocationData = { city: "Local desconhecido", countryCode: "" }
+
+    try {
+        firstLocationData = await getlocationData(firstPosition.latitude, firstPosition.longitude)
+    } catch (error) {
+        console.warn("Não foi possível carregar a cidade:", error)
+    }
 
     const cityDiv = document.createElement("li")
-    cityDiv.innerText = `${firstLocationData.city} - ${firstLocationData.countryCode}`
+    cityDiv.innerText = `${firstLocationData.city}  ${firstLocationData.countryCode}`
     cityDiv.className = "text-primary mb-2"
 
     const maxSpeedDiv = document.createElement("div")
@@ -40,9 +44,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     dataElement.appendChild(cityDiv)
     dataElement.appendChild(maxSpeedDiv)
     dataElement.appendChild(distanceDiv)
+    dataElement.appendChild(durationDiv)
     dataElement.appendChild(dateDiv)
 
     document.querySelector("#data").appendChild(dataElement)
-})
 
-//parei aqui
+    const deleteButton = document.querySelector("#deleteBtn")
+    deleteButton.addEventListener("click", () => {
+        deleteRide(rideID)
+        window.location.href = "./index.html" // Ajustado para não quebrar no GitHub Pages
+    })
+
+    const map = L.map("mapDetail")
+    map.setView([firstPosition.latitude, firstPosition.longitude], 13)
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        minZoom: 5,
+        maxZoom: 16,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    const positionsArray = ride.data.map(position => [position.latitude, position.longitude])
+
+    if (positionsArray.length > 1) {
+        const polyLine = L.polyline(positionsArray, { color: "#F00" })
+        polyLine.addTo(map)
+        map.fitBounds(polyLine.getBounds())
+    } else {
+        L.marker([firstPosition.latitude, firstPosition.longitude]).addTo(map)
+    }
+})
