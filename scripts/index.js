@@ -25,7 +25,7 @@ allRides.forEach(async ([id, value]) => {
     rideListElement.appendChild(itemElement)
 
     itemElement.addEventListener("click", () => {
-        window.location.href = `../detail.html?id=${ride.id}`
+        window.location.href = `./detail.html?id=${ride.id}`
     })
 
     const firstPosition = ride.data[0]
@@ -63,7 +63,7 @@ allRides.forEach(async ([id, value]) => {
     const map = L.map(mapID, {
         attributionControl: false,
         zoomControl: false,
-        draggin: false,
+        dragging: false, 
         scrollWheelZoom: false
     })
     map.setView([firstPosition.latitude, firstPosition.longitude], 13)
