@@ -5,9 +5,9 @@ const ride = getRideRecord(rideID)
 document.addEventListener("DOMContentLoaded", async () => {
 
     // Verificação colocada no lugar certo (dentro da função)
-    if (!ride || !ride.data || ride.data.length === 0) {
+if (!ride || !ride.data || ride.data.length === 0) {
         alert("Nenhum dado encontrado para esta corrida.")
-        window.location.href = "./index.html"
+        window.location.href = "./index.html" // <-- Certifique-se que tem o "./" na frente
         return
     }
 
